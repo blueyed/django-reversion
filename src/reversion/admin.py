@@ -468,12 +468,12 @@ class VersionMetaAdmin(VersionAdmin):
                     JOIN %(revision_table)s ON %(revision_table)s.id = %(version_table)s.revision_id 
                     WHERE %(version_table)s.content_type_id = %%s AND %(version_table)s.%(version_table_field)s = %(table)s.%(pk)s 
                 """ % {
-                    "revision_table": connection.ops.quote_name(Revision._meta.db_table),
-                    "version_table": connection.ops.quote_name(Version._meta.db_table),
-                    "table": connection.ops.quote_name(self.model._meta.db_table),
-                    "pk": connection.ops.quote_name(pk.db_column or pk.attname),
-                    "version_table_field": connection.ops.quote_name(version_table_field),
-                }
+            "revision_table": connection.ops.quote_name(Revision._meta.db_table),
+            "version_table": connection.ops.quote_name(Version._meta.db_table),
+            "table": connection.ops.quote_name(self.model._meta.db_table),
+            "pk": connection.ops.quote_name(pk.db_column or pk.attname),
+            "version_table_field": connection.ops.quote_name(version_table_field),
+            }
             },
             select_params=(content_type.id,),
         )
