@@ -17,7 +17,7 @@ from django.conf.urls import url, patterns, include
 from django.contrib import admin
 try:
     from django.contrib.auth import get_user_model
-except ImportError: # django < 1.5
+except ImportError:  # django < 1.5
     from django.contrib.auth.models import User
 else:
     User = get_user_model()
@@ -882,9 +882,9 @@ class VersionAdminTest(TestCase):
                                    (parent_pk, version_list[1].id))
         self.assertEqual(response.status_code, 200)
         if should_delete:
-            self.assertContains(response, '<input checked="checked" id="id_children-0-DELETE" name="children-0-DELETE" type="checkbox" />') # this is crude
+            self.assertContains(response, '<input checked="checked" id="id_children-0-DELETE" name="children-0-DELETE" type="checkbox" />')  # this is crude
         else:
-            self.assertNotContains(response, '<input checked="checked" id="id_children-0-DELETE" name="children-0-DELETE" type="checkbox" />') # this is crude
+            self.assertNotContains(response, '<input checked="checked" id="id_children-0-DELETE" name="children-0-DELETE" type="checkbox" />')  # this is crude
 
         # don't actually submit a post since the values we submit would be from the test, not what the admin defaults
 

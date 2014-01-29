@@ -405,7 +405,7 @@ class VersionAdmin(admin.ModelAdmin):
         # check if user has change or add permissions for model
         if not self.has_change_permission(request):
             raise PermissionDenied
-        object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
+        object_id = unquote(object_id)  # Underscores in primary key get quoted to "_5F"
         obj = get_object_or_404(self.model, pk=object_id)
         version = get_object_or_404(Version, pk=version_id, object_id=force_text(obj.pk))
         # Generate the context.
@@ -426,7 +426,7 @@ class VersionAdmin(admin.ModelAdmin):
         # check if user has change or add permissions for model
         if not self.has_change_permission(request):
             raise PermissionDenied
-        object_id = unquote(object_id) # Underscores in primary key get quoted to "_5F"
+        object_id = unquote(object_id)  # Underscores in primary key get quoted to "_5F"
         opts = self.model._meta
         action_list = [
             {
