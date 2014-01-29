@@ -72,12 +72,12 @@ class ReversionTestModel1(ReversionTestModelBase):
     pass
 
 
-str_pk_gen = 0;
+str_pk_gen = 0
 
 
 def get_str_pk():
     global str_pk_gen
-    str_pk_gen += 1;
+    str_pk_gen += 1
     return force_text(str_pk_gen)
 
 
