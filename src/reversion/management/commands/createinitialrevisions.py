@@ -124,7 +124,7 @@ class Command(BaseCommand):
                 live_objs.values_list(model_class._meta.pk.name, flat=True))
             total = len(ids)
             for i in range(0, total, batch_size):
-                chunked_ids = ids[i:i +batch_size]
+                chunked_ids = ids[i:i + batch_size]
                 objects = live_objs.in_bulk(chunked_ids)
                 for id, obj in objects.items():
                     try:
