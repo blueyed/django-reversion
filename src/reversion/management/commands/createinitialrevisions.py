@@ -35,10 +35,10 @@ class Command(BaseCommand):
     help = "Creates initial revisions for a given app [and model]."
 
     def handle(self, *app_labels, **options):
-        
+
         # Activate project's default language
         translation.activate(settings.LANGUAGE_CODE)
-        
+
         comment = options["comment"]
         batch_size = options["batch_size"]
 
@@ -85,7 +85,7 @@ class Command(BaseCommand):
         for app, model_classes in app_list.items():
             for model_class in model_classes:
                 self.create_initial_revisions(app, model_class, comment, batch_size, verbosity)
-        
+
         # Go back to default language
         translation.deactivate()
 

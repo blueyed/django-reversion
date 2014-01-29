@@ -15,7 +15,7 @@ else:
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding model 'Revision'
         db.create_table('reversion_revision', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -38,7 +38,7 @@ class Migration(SchemaMigration):
         db.send_create_signal('reversion', ['Version'])
 
     def backwards(self, orm):
-        
+
         # Deleting model 'Revision'
         db.delete_table('reversion_revision')
 

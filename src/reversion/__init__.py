@@ -32,7 +32,7 @@ get_registered_models = default_revision_manager.get_registered_models
 # Context management.
 create_revision = revision_context_manager.create_revision
 
-    
+
 # Revision meta data.
 get_db = revision_context_manager.get_db
 set_db = revision_context_manager.set_db

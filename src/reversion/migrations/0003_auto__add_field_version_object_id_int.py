@@ -7,13 +7,13 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding field 'Version.object_id_int'
         db.add_column('reversion_version', 'object_id_int', self.gf('django.db.models.fields.IntegerField')(db_index=True, null=True, blank=True), keep_default=False)
 
 
     def backwards(self, orm):
-        
+
         # Deleting field 'Version.object_id_int'
         db.delete_column('reversion_version', 'object_id_int')
 
