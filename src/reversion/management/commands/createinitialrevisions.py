@@ -134,4 +134,4 @@ class Command(BaseCommand):
                 print("Created %s initial revision(s) for model %s." % (created_count, force_text(model_class._meta.verbose_name)))
         else:
             if verbosity >= 2:
-                print("Model %s is not registered."  % (force_text(model_class._meta.verbose_name)))
+                print("Model %s is not registered." % (force_text(model_class._meta.verbose_name)))
