@@ -802,7 +802,7 @@ urlpatterns = patterns("",
                        url("^admin/",
                            include(site.get_urls(), namespace="admin")),
 
-)
+                       )
 
 
 class RevisionMiddlewareTest(ReversionTestBase):
