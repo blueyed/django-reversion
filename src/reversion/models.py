@@ -27,7 +27,8 @@ def safe_revert(versions):
         except (IntegrityError, ObjectDoesNotExist):
             unreverted_versions.append(version)
     if len(unreverted_versions) == len(versions):
-        raise RevertError("Could not revert revision, due to database integrity errors.")
+        raise RevertError(
+            "Could not revert revision, due to database integrity errors.")
     if unreverted_versions:
         safe_revert(unreverted_versions)
 
@@ -81,7 +82,8 @@ class Revision(models.Model):
                     old_revision[obj] = version
             # Calculate the set of all objects that are in the revision now.
             from reversion.revisions import RevisionManager
-            current_revision = RevisionManager.get_manager(self.manager_slug)._follow_relationships(obj for obj in old_revision.keys() if obj is not None)
+            current_revision = RevisionManager.get_manager(self.manager_slug)._follow_relationships(
+                obj for obj in old_revision.keys() if obj is not None)
             # Delete objects that are no longer in the current revision.
             for item in current_revision:
                 if item not in old_revision:
@@ -115,7 +117,8 @@ class Version(models.Model):
     revision = models.ForeignKey(Revision,
                                  help_text="The revision that contains this version.")
 
-    object_id = models.TextField(help_text="Primary key of the model under version control.")
+    object_id = models.TextField(
+        help_text="Primary key of the model under version control.")
 
     object_id_int = models.IntegerField(
         blank=True,
@@ -133,9 +136,11 @@ class Version(models.Model):
     format = models.CharField(max_length=255,
                               help_text="The serialization format used by this model.")
 
-    serialized_data = models.TextField(help_text="The serialized form of this version of the model.")
+    serialized_data = models.TextField(
+        help_text="The serialized form of this version of the model.")
 
-    object_repr = models.TextField(help_text="A string representation of the object.")
+    object_repr = models.TextField(
+        help_text="A string representation of the object.")
 
     @property
     def object_version(self):
@@ -167,7 +172,8 @@ class Version(models.Model):
                 else:
                     parent_id = obj.pk
                 try:
-                    parent_version = Version.objects.get(revision__id=self.revision_id,
+                    parent_version = Version.objects.get(
+                        revision__id=self.revision_id,
                                                          content_type=content_type,
                                                          object_id=parent_id)
                 except Version.DoesNotExist:
@@ -187,5 +193,7 @@ class Version(models.Model):
 
 
 # Version management signals.
-pre_revision_commit = Signal(providing_args=["instances", "revision", "versions"])
-post_revision_commit = Signal(providing_args=["instances", "revision", "versions"])
+pre_revision_commit = Signal(
+    providing_args=["instances", "revision", "versions"])
+post_revision_commit = Signal(
+    providing_args=["instances", "revision", "versions"])

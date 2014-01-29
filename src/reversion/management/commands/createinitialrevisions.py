@@ -59,11 +59,13 @@ class Command(BaseCommand):
                     try:
                         app = models.get_app(app_label)
                     except ImproperlyConfigured:
-                        raise CommandError("Unknown application: %s" % app_label)
+                        raise CommandError("Unknown application: %s" %
+                                           app_label)
 
                     model_class = models.get_model(app_label, model_label)
                     if model_class is None:
-                        raise CommandError("Unknown model: %s.%s" % (app_label, model_label))
+                        raise CommandError("Unknown model: %s.%s" %
+                                           (app_label, model_label))
                     if app in app_list:
                         if app_list[app] and model_class not in app_list[app]:
                             app_list[app].append(model_class)
@@ -80,11 +82,13 @@ class Command(BaseCommand):
                             if not model_class in app_list[app]:
                                 app_list[app].append(model_class)
                     except ImproperlyConfigured:
-                        raise CommandError("Unknown application: %s" % app_label)
+                        raise CommandError("Unknown application: %s" %
+                                           app_label)
         # Create revisions.
         for app, model_classes in app_list.items():
             for model_class in model_classes:
-                self.create_initial_revisions(app, model_class, comment, batch_size, verbosity)
+                self.create_initial_revisions(
+                    app, model_class, comment, batch_size, verbosity)
 
         # Go back to default language
         translation.deactivate()
@@ -100,29 +104,36 @@ class Command(BaseCommand):
         if default_revision_manager.is_registered(model_class):
             created_count = 0
             content_type = ContentType.objects.get_for_model(model_class)
-            versioned_pk_queryset = Version.objects.filter(content_type=content_type).all()
+            versioned_pk_queryset = Version.objects.filter(
+                content_type=content_type).all()
             live_objs = model_class._default_manager.all()
             if has_int_pk(model_class):
                 # We can do this as a fast database join!
                 live_objs = live_objs.exclude(
-                    pk__in=versioned_pk_queryset.values_list("object_id_int", flat=True)
+                    pk__in=versioned_pk_queryset.values_list(
+                        "object_id_int", flat=True)
                 )
             else:
                 # This join has to be done as two separate queries.
                 live_objs = live_objs.exclude(
-                    pk__in=list(versioned_pk_queryset.values_list("object_id", flat=True).iterator())
+                    pk__in=list(
+                        versioned_pk_queryset.values_list("object_id", flat=True).iterator())
                 )
             # Save all the versions.
-            ids = list(live_objs.values_list(model_class._meta.pk.name, flat=True))
+            ids = list(
+                live_objs.values_list(model_class._meta.pk.name, flat=True))
             total = len(ids)
             for i in range(0, total, batch_size):
                 chunked_ids = ids[i:i +batch_size]
                 objects = live_objs.in_bulk(chunked_ids)
                 for id, obj in objects.items():
                     try:
-                        default_revision_manager.save_revision((obj,), comment=comment)
+                        default_revision_manager.save_revision(
+                            (obj,), comment=comment)
                     except:
-                        print("ERROR: Could not save initial version for %s %s." % (model_class.__name__, obj.pk))
+                        print(
+                            "ERROR: Could not save initial version for %s %s." %
+                              (model_class.__name__, obj.pk))
                         raise
                     created_count += 1
                 reset_queries()
@@ -131,7 +142,9 @@ class Command(BaseCommand):
 
             # Print out a message, if feeling verbose.
             if verbosity >= 2:
-                print("Created %s initial revision(s) for model %s." % (created_count, force_text(model_class._meta.verbose_name)))
+                print("Created %s initial revision(s) for model %s." %
+                      (created_count, force_text(model_class._meta.verbose_name)))
         else:
             if verbosity >= 2:
-                print("Model %s is not registered." % (force_text(model_class._meta.verbose_name)))
+                print("Model %s is not registered." % (
+                    force_text(model_class._meta.verbose_name)))

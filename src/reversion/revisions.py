@@ -44,8 +44,10 @@ class VersionAdapter(object):
     def get_fields_to_serialize(self):
         """Returns an iterable of field names to serialize in the version data."""
         opts = self.model._meta
-        fields = self.fields or (field.name for field in opts.local_fields + opts.local_many_to_many)
-        fields = (opts.get_field(field) for field in fields if not field in self.exclude)
+        fields = self.fields or (
+            field.name for field in opts.local_fields + opts.local_many_to_many)
+        fields = (opts.get_field(field)
+                  for field in fields if not field in self.exclude)
         for field in fields:
             if field.rel:
                 yield field.name
@@ -149,7 +151,8 @@ class RevisionContextManager(local):
     def _assert_active(self):
         """Checks for an active revision, throwning an exception if none."""
         if not self.is_active():
-            raise RevisionManagementError("There is no active revision for this thread")
+            raise RevisionManagementError(
+                "There is no active revision for this thread")
 
     def start(self, manage_manually=False):
         """
@@ -324,13 +327,15 @@ class RevisionManager(object):
         """Returns the manager with the given slug."""
         if manager_slug in cls._created_managers:
             return cls._created_managers[manager_slug]
-        raise RegistrationError("No revision manager exists with the slug %r" % manager_slug)
+        raise RegistrationError(
+            "No revision manager exists with the slug %r" % manager_slug)
 
     def __init__(self, manager_slug, revision_context_manager=revision_context_manager):
         """Initializes the revision manager."""
         # Check the slug is unique for this revision manager.
         if manager_slug in RevisionManager._created_managers:
-            raise RegistrationError("A revision manager has already been created with the slug %r" % manager_slug)
+            raise RegistrationError(
+                "A revision manager has already been created with the slug %r" % manager_slug)
         # Store a reference to this manager.
         self.__class__._created_managers[manager_slug] = self
         # Store config params.
@@ -381,10 +386,12 @@ class RevisionManager(object):
                 ))
         # Perform any customization.
         if field_overrides:
-            adapter_cls = type(adapter_cls.__name__, (adapter_cls,), field_overrides)
+            adapter_cls = type(adapter_cls.__name__,
+                               (adapter_cls,), field_overrides)
         # Perform the registration.
         adapter_obj = adapter_cls(model)
-        self._registered_models[self._registration_key_for_model(model)] = adapter_obj
+        self._registered_models[
+            self._registration_key_for_model(model)] = adapter_obj
         # Connect to the post save signal of the model.
         post_save.connect(self._post_save_receiver, model)
 
@@ -434,7 +441,8 @@ class RevisionManager(object):
         # Adapt the objects to a dict.
         if isinstance(objects, (list, tuple)):
             objects = dict(
-                (obj, self.get_adapter(obj.__class__).get_version_data(obj, db))
+                (obj, self.get_adapter(obj.__class__)
+                 .get_version_data(obj, db))
                 for obj in objects
             )
         # Create the revision.
@@ -450,15 +458,21 @@ class RevisionManager(object):
             # Check if there's some change in all the revision's objects.
             save_revision = True
             if ignore_duplicates:
-                # Find the latest revision amongst the latest previous version of each object.
-                subqueries = [Q(object_id=version.object_id, content_type=version.content_type) for version in new_versions]
+                # Find the latest revision amongst the latest previous version
+                # of each object.
+                subqueries = [Q(object_id=version.object_id, content_type=version.content_type)
+                                for version in new_versions]
                 subqueries = reduce(operator.or_, subqueries)
-                latest_revision = self._get_versions(db).filter(subqueries).aggregate(Max("revision"))["revision__max"]
-                # If we have a latest revision, compare it to the current revision.
+                latest_revision = self._get_versions(db).filter(
+                    subqueries).aggregate(Max("revision"))["revision__max"]
+                # If we have a latest revision, compare it to the current
+                # revision.
                 if latest_revision is not None:
-                    previous_versions = self._get_versions(db).filter(revision=latest_revision).values_list("serialized_data", flat=True)
+                    previous_versions = self._get_versions(db).filter(
+                        revision=latest_revision).values_list("serialized_data", flat=True)
                     if len(previous_versions) == len(new_versions):
-                        all_serialized_data = [version.serialized_data for version in new_versions]
+                        all_serialized_data = [
+                            version.serialized_data for version in new_versions]
                         if sorted(previous_versions) == sorted(all_serialized_data):
                             save_revision = False
             # Only save if we're always saving, or have changes.
@@ -484,7 +498,8 @@ class RevisionManager(object):
                     Version.objects.using(db).bulk_create(new_versions)
                     # Save the meta information.
                     for cls, kwargs in meta:
-                        cls._default_manager.db_manager(db).create(revision=revision, **kwargs)
+                        cls._default_manager.db_manager(
+                            db).create(revision=revision, **kwargs)
                 # Send the pre_revision_commit signal.
                 post_revision_commit.send(self,
                                           instances=ordered_objects,
@@ -560,13 +575,16 @@ class RevisionManager(object):
         """
         db = db or DEFAULT_DB_ALIAS
         model_db = model_db or db
-        content_type = ContentType.objects.db_manager(db).get_for_model(model_class)
-        live_pk_queryset = model_class._default_manager.db_manager(model_db).all().values_list("pk", flat=True)
+        content_type = ContentType.objects.db_manager(
+            db).get_for_model(model_class)
+        live_pk_queryset = model_class._default_manager.db_manager(
+            model_db).all().values_list("pk", flat=True)
         versioned_objs = self._get_versions(db).filter(
             content_type=content_type,
         )
         if has_int_pk(model_class):
-            # If the model and version data are in different databases, decouple the queries.
+            # If the model and version data are in different databases,
+            # decouple the queries.
             if model_db != db:
                 live_pk_queryset = list(live_pk_queryset.iterator())
             # We can do this as a fast, in-database join.
@@ -582,7 +600,8 @@ class RevisionManager(object):
             latest_pk=Max("pk")
         ).values_list("latest_pk", flat=True)
         # HACK: MySQL deals extremely badly with this as a subquery, and can hang infinitely.
-        # TODO: If a version is identified where this bug no longer applies, we can add a version specifier.
+        # TODO: If a version is identified where this bug no longer applies, we
+        # can add a version specifier.
         if connection.vendor == "mysql":
             deleted_version_pks = list(deleted_version_pks)
         # Return the deleted versions!
@@ -594,8 +613,10 @@ class RevisionManager(object):
         """Adds registered models to the current revision, if any."""
         if self._revision_context_manager.is_active() and not self._revision_context_manager.is_managing_manually():
             adapter = self.get_adapter(instance.__class__)
-            version_data = lambda: adapter.get_version_data(instance, self._revision_context_manager._db)
-            self._revision_context_manager.add_to_context(self, instance, version_data)
+            version_data = lambda: adapter.get_version_data(
+                instance, self._revision_context_manager._db)
+            self._revision_context_manager.add_to_context(
+                self, instance, version_data)
 
 
 # A shared revision manager.

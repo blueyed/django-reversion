@@ -17,7 +17,8 @@ class RevisionMiddleware(object):
     def process_request(self, request):
         """Starts a new revision."""
         if request.META.get(REVISION_MIDDLEWARE_FLAG, False):
-            raise ImproperlyConfigured("RevisionMiddleware can only be included in MIDDLEWARE_CLASSES once.")
+            raise ImproperlyConfigured(
+                "RevisionMiddleware can only be included in MIDDLEWARE_CLASSES once.")
         request.META[REVISION_MIDDLEWARE_FLAG] = True
         revision_context_manager.start()
 
@@ -29,7 +30,8 @@ class RevisionMiddleware(object):
 
     def process_response(self, request, response):
         """Closes the revision."""
-        # look to see if the session has been accessed before looking for user to stop Vary: Cookie
+        # look to see if the session has been accessed before looking for user
+        # to stop Vary: Cookie
         if hasattr(request, 'session') and request.session.accessed \
                 and hasattr(request, "user") and request.user.is_authenticated() \
                 and revision_context_manager.is_active():

@@ -18,21 +18,31 @@ class Migration(SchemaMigration):
 
         # Adding model 'Revision'
         db.create_table('reversion_revision', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('date_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm["%s.%s" % (User._meta.app_label, User._meta.object_name)], null=True, blank=True)),
-            ('comment', self.gf('django.db.models.fields.TextField')(blank=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')
+             (primary_key=True)),
+            ('date_created', self.gf('django.db.models.fields.DateTimeField')
+             (auto_now_add=True, blank=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')
+             (to=orm[
+                 "%s.%s" % (User._meta.app_label, User._meta.object_name)], null=True, blank=True)),
+            ('comment', self.gf('django.db.models.fields.TextField')
+             (blank=True)),
         ))
         db.send_create_signal('reversion', ['Revision'])
 
         # Adding model 'Version'
         db.create_table('reversion_version', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('revision', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['reversion.Revision'])),
+            ('id', self.gf('django.db.models.fields.AutoField')
+             (primary_key=True)),
+            ('revision', self.gf('django.db.models.fields.related.ForeignKey')
+             (to=orm['reversion.Revision'])),
             ('object_id', self.gf('django.db.models.fields.TextField')()),
-            ('content_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contenttypes.ContentType'])),
-            ('format', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('serialized_data', self.gf('django.db.models.fields.TextField')()),
+            ('content_type', self.gf('django.db.models.fields.related.ForeignKey')
+             (to=orm['contenttypes.ContentType'])),
+            ('format', self.gf('django.db.models.fields.CharField')
+             (max_length=255)),
+            ('serialized_data',
+             self.gf('django.db.models.fields.TextField')()),
             ('object_repr', self.gf('django.db.models.fields.TextField')()),
         ))
         db.send_create_signal('reversion', ['Version'])

@@ -75,19 +75,23 @@ Examples:
         try:
             verbosity = int(options["verbosity"])
         except ValueError:
-            raise CommandError("option -v: invalid choice: '%s' (choose from '0', '1', '2')" % options["verbosity"])
+            raise CommandError(
+                "option -v: invalid choice: '%s' (choose from '0', '1', '2')" % options["verbosity"])
 
         date = None
 
         # Validating arguments
         if options["date"]:
             if days:
-                raise CommandError("You cannot use --date and --days at the same time. They are exclusive.")
+                raise CommandError(
+                    "You cannot use --date and --days at the same time. They are exclusive.")
 
             try:
-                date = datetime.datetime.strptime(options["date"], "%Y-%m-%d").date()
+                date = datetime.datetime.strptime(
+                    options["date"], "%Y-%m-%d").date()
             except ValueError:
-                raise CommandError("The date you give (%s) is not a valid date. The date should be in the ISO format (YYYY-MM-DD)." % options["date"])
+                raise CommandError(
+                    "The date you give (%s) is not a valid date. The date should be in the ISO format (YYYY-MM-DD)." % options["date"])
 
         # Find the date from the days arguments.
         elif days:
@@ -120,15 +124,18 @@ Examples:
             if app_list:
                 subqueries.append(Q(app_label__in=app_list))
             if mod_list:
-                subqueries.extend([Q(app_label=app, model=model) for app, model in mod_list])
+                subqueries.extend([Q(app_label=app, model=model)
+                                  for app, model in mod_list])
             subqueries = reduce(operator.or_, subqueries)
 
             if force:
                 models = ContentType.objects.filter(subqueries)
-                revision_query = revision_query.filter(version__content_type__in=models)
+                revision_query = revision_query.filter(
+                    version__content_type__in=models)
             else:
                 models = ContentType.objects.exclude(subqueries)
-                revision_query = revision_query.exclude(version__content_type__in=models)
+                revision_query = revision_query.exclude(
+                    version__content_type__in=models)
 
         if keep:
             objs = Version.objects.all()
@@ -142,7 +149,8 @@ Examples:
                     objs = objs.exclude(content_type__in=models)
 
             # Get all the objects that have more then the maximum revisions
-            objs = objs.values("object_id", "content_type_id").annotate(total_ver=Count("object_id")).filter(total_ver__gt=keep)
+            objs = objs.values("object_id", "content_type_id").annotate(
+                total_ver=Count("object_id")).filter(total_ver__gt=keep)
 
             revisions_not_keeped = set()
 
@@ -150,7 +158,8 @@ Examples:
             # revisions for all objects.
             # Was not able to avoid this loop...
             for obj in objs:
-                revisions_not_keeped.update(list(Version.objects.filter(content_type__id=obj["content_type_id"], object_id=obj["object_id"]).order_by("-revision__date_created").values_list("revision_id", flat=True)[keep:]))
+                revisions_not_keeped.update(list(Version.objects.filter(content_type__id=obj["content_type_id"], object_id=obj[
+                                            "object_id"]).order_by("-revision__date_created").values_list("revision_id", flat=True)[keep:]))
 
             revision_query = revision_query.filter(pk__in=revisions_not_keeped)
 
@@ -167,7 +176,8 @@ Examples:
                     force_msg = ""
                     if not force:
                         force_msg = " only"
-                    models_msg = " having%s theses apps and models:\n- %s\n" % (force_msg, "\n- ".join(sorted(app_list.union(["%s.%s" % (app, model) for app, model in mod_list])),))
+                    models_msg = " having%s theses apps and models:\n- %s\n" % (
+                        force_msg, "\n- ".join(sorted(app_list.union(["%s.%s" % (app, model) for app, model in mod_list])),))
                     if date:
                         models_msg = " and" + models_msg
                 keep_msg = ""
@@ -178,15 +188,20 @@ Examples:
                 if revision_count:
                     version_query = Version.objects.all()
                     if date or app_labels or keep:
-                        version_query = version_query.filter(revision__in=revision_query)
-                    print("%s revision(s)%s%swill be deleted%s.\n%s model version(s) will be deleted." % (revision_count, date_msg, models_msg, keep_msg, version_query.count()))
+                        version_query = version_query.filter(
+                            revision__in=revision_query)
+                    print(
+                        "%s revision(s)%s%swill be deleted%s.\n%s model version(s) will be deleted." %
+                          (revision_count, date_msg, models_msg, keep_msg, version_query.count()))
                 else:
-                    print("No revision%s%sto delete%s.\nDone" % (date_msg, models_msg, keep_msg))
+                    print("No revision%s%sto delete%s.\nDone" %
+                          (date_msg, models_msg, keep_msg))
                     sys.exit()
 
         # Ask confirmation
         if confirmation:
-            choice = raw_input("Are you sure you want to delete theses revisions? [y|N] ")
+            choice = raw_input(
+                "Are you sure you want to delete theses revisions? [y|N] ")
             if choice.lower() != "y":
                 print("Aborting revision deletion.")
                 sys.exit()

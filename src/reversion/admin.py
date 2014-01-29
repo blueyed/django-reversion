@@ -51,7 +51,8 @@ class VersionAdmin(admin.ModelAdmin):
     # Whether to ignore duplicate revision data.
     ignore_duplicate_revisions = False
 
-    # If True, then the default ordering of object_history and recover lists will be reversed.
+    # If True, then the default ordering of object_history and recover lists
+    # will be reversed.
     history_latest_first = False
 
     def _autoregister(self, model, follow=None):
@@ -68,7 +69,8 @@ class VersionAdmin(admin.ModelAdmin):
             for parent_cls, field in model._meta.parents.items():
                 follow.append(field.name)
                 self._autoregister(parent_cls)
-            self.revision_manager.register(model, follow=follow, format=self.reversion_format)
+            self.revision_manager.register(model, follow=follow,
+                                           format=self.reversion_format)
 
     @property
     def revision_context_manager(self):
@@ -96,7 +98,8 @@ class VersionAdmin(admin.ModelAdmin):
                         fk_name = field.name
                         break
             if fk_name and not inline_model._meta.get_field(fk_name).rel.is_hidden():
-                accessor = inline_model._meta.get_field(fk_name).related.get_accessor_name()
+                accessor = inline_model._meta.get_field(
+                    fk_name).related.get_accessor_name()
                 follow_field = accessor
         return inline_model, follow_field
 
@@ -107,23 +110,30 @@ class VersionAdmin(admin.ModelAdmin):
         if not self.revision_manager.is_registered(self.model):
             inline_fields = []
             for inline in self.inlines:
-                inline_model, follow_field = self._introspect_inline_admin(inline)
+                inline_model, follow_field = self._introspect_inline_admin(
+                    inline)
                 if inline_model:
                     self._autoregister(inline_model)
                 if follow_field:
                     inline_fields.append(follow_field)
             self._autoregister(self.model, inline_fields)
         # Wrap own methods in manual revision management.
-        self.add_view = self.revision_context_manager.create_revision(manage_manually=True)(self.add_view)
-        self.change_view = self.revision_context_manager.create_revision(manage_manually=True)(self.change_view)
-        self.recover_view = self.revision_context_manager.create_revision(manage_manually=True)(self.recover_view)
-        self.revision_view = self.revision_context_manager.create_revision(manage_manually=True)(self.revision_view)
-        self.changelist_view = self.revision_context_manager.create_revision(manage_manually=True)(self.changelist_view)
+        self.add_view = self.revision_context_manager.create_revision(
+            manage_manually=True)(self.add_view)
+        self.change_view = self.revision_context_manager.create_revision(
+            manage_manually=True)(self.change_view)
+        self.recover_view = self.revision_context_manager.create_revision(
+            manage_manually=True)(self.recover_view)
+        self.revision_view = self.revision_context_manager.create_revision(
+            manage_manually=True)(self.revision_view)
+        self.changelist_view = self.revision_context_manager.create_revision(
+            manage_manually=True)(self.changelist_view)
 
     def _get_template_list(self, template_name):
         opts = self.model._meta
         return (
-            "reversion/%s/%s/%s" % (opts.app_label, opts.object_name.lower(), template_name),
+            "reversion/%s/%s/%s" % (opts.app_label,
+                                    opts.object_name.lower(), template_name),
             "reversion/%s/%s" % (opts.app_label, template_name),
             "reversion/%s" % template_name,
         )
@@ -135,8 +145,10 @@ class VersionAdmin(admin.ModelAdmin):
         opts = self.model._meta
         info = opts.app_label, opts.module_name,
         reversion_urls = patterns("",
-                                  url("^recover/$", admin_site.admin_view(self.recoverlist_view), name='%s_%s_recoverlist' % info),
-                                  url("^recover/([^/]+)/$", admin_site.admin_view(self.recover_view), name='%s_%s_recover' % info),
+                                  url("^recover/$", admin_site.admin_view(self.recoverlist_view),
+                                      name='%s_%s_recoverlist' % info),
+                                  url("^recover/([^/]+)/$", admin_site.admin_view(self.recover_view),
+                                      name='%s_%s_recover' % info),
                                   url("^([^/]+)/history/([^/]+)/$", admin_site.admin_view(self.revision_view), name='%s_%s_revision' % info),)
         return reversion_urls + urls
 
@@ -147,7 +159,8 @@ class VersionAdmin(admin.ModelAdmin):
     def get_revision_data(self, request, object):
         """Returns all the revision data to be used in the object's revision."""
         return dict(
-            (o, self.revision_manager.get_adapter(o.__class__).get_version_data(o))
+            (o, self.revision_manager.get_adapter(o.__class__)
+             .get_version_data(o))
             for o in self.get_revision_instances(request, object)
         )
 
@@ -186,7 +199,8 @@ class VersionAdmin(admin.ModelAdmin):
             raise PermissionDenied
         model = self.model
         opts = model._meta
-        deleted = self._order_version_queryset(self.revision_manager.get_deleted(self.model))
+        deleted = self._order_version_queryset(
+            self.revision_manager.get_deleted(self.model))
         context = {
             "opts": opts,
             "app_label": opts.app_label,
@@ -197,7 +211,9 @@ class VersionAdmin(admin.ModelAdmin):
         }
         extra_context = extra_context or {}
         context.update(extra_context)
-        return render_to_response(self.recover_list_template or self._get_template_list("recover_list.html"),
+        return render_to_response(
+            self.recover_list_template or self._get_template_list(
+                "recover_list.html"),
                                   context, template.RequestContext(request))
 
     def get_revision_form_data(self, request, obj, version):
@@ -237,19 +253,22 @@ class VersionAdmin(admin.ModelAdmin):
         formset.related_versions = related_versions
         for related_obj in formset.queryset:
             if force_text(related_obj.pk) in related_versions:
-                initial.append(related_versions.pop(force_text(related_obj.pk)).field_dict)
+                initial.append(related_versions.pop(
+                    force_text(related_obj.pk)).field_dict)
             else:
                 initial_data = model_to_dict(related_obj)
                 initial_data["DELETE"] = True
                 initial.append(initial_data)
         for related_version in related_versions.values():
             initial_row = related_version.field_dict
-            pk_name = ContentType.objects.get_for_id(related_version.content_type_id).model_class()._meta.pk.name
+            pk_name = ContentType.objects.get_for_id(
+                related_version.content_type_id).model_class()._meta.pk.name
             del initial_row[pk_name]
             initial.append(initial_row)
         # Reconstruct the forms with the new revision data.
         formset.initial = initial
-        formset.forms = [formset._construct_form(n) for n in range(len(initial))]
+        formset.forms = [
+            formset._construct_form(n) for n in range(len(initial))]
         # Hack the formset to force a save of everything.
 
         def get_changed_data(form):
@@ -272,12 +291,15 @@ class VersionAdmin(admin.ModelAdmin):
         formsets = []
         if request.method == "POST":
             # This section is copied directly from the model admin change view
-            # method.  Maybe one day there will be a hook for doing this better.
-            form = ModelForm(request.POST, request.FILES, instance=obj, initial=self.get_revision_form_data(request, obj, version))
+            # method.  Maybe one day there will be a hook for doing this
+            # better.
+            form = ModelForm(request.POST, request.FILES, instance=obj,
+                             initial=self.get_revision_form_data(request, obj, version))
             if form.is_valid():
                 form_validated = True
                 new_object = self.save_form(request, form, change=True)
-                # HACK: If the value of a file field is None, remove the file from the model.
+                # HACK: If the value of a file field is None, remove the file
+                # from the model.
                 for field in new_object._meta.fields:
                     if isinstance(field, models.FileField) and field.name in form.cleaned_data and form.cleaned_data[field.name] is None:
                         setattr(new_object, field.name, None)
@@ -295,14 +317,16 @@ class VersionAdmin(admin.ModelAdmin):
                 formset = FormSet(request.POST, request.FILES,
                                   instance=new_object, prefix=prefix,
                                   queryset=inline.queryset(request))
-                self._hack_inline_formset_initial(inline, FormSet, formset, obj, version, revert, recover)
+                self._hack_inline_formset_initial(inline, FormSet,
+                                                  formset, obj, version, revert, recover)
                 # Add this hacked formset to the form.
                 formsets.append(formset)
             if all_valid(formsets) and form_validated:
                 self.save_model(request, new_object, form, change=True)
                 form.save_m2m()
                 for formset in formsets:
-                    # HACK: If the value of a file field is None, remove the file from the model.
+                    # HACK: If the value of a file field is None, remove the
+                    # file from the model.
                     related_objects = formset.save(commit=False)
                     for related_obj, related_form in zip(related_objects, formset.saved_forms):
                         for field in related_obj._meta.fields:
@@ -310,9 +334,12 @@ class VersionAdmin(admin.ModelAdmin):
                                 setattr(related_obj, field.name, None)
                         related_obj.save()
                     formset.save_m2m()
-                change_message = _("Reverted to previous version, saved on %(datetime)s") % {"datetime": localize(version.revision.date_created)}
+                change_message = _("Reverted to previous version, saved on %(datetime)s") % {
+                                   "datetime": localize(version.revision.date_created)}
                 self.log_change(request, new_object, change_message)
-                self.message_user(request, _('The %(model)s "%(name)s" was reverted successfully. You may edit it again below.') % {"model": force_text(opts.verbose_name), "name": force_text(obj)})
+                self.message_user(
+                    request, _('The %(model)s "%(name)s" was reverted successfully. You may edit it again below.') %
+                                  {"model": force_text(opts.verbose_name), "name": force_text(obj)})
                 # Redirect to the model change form.
                 if revert:
                     return HttpResponseRedirect("../../")
@@ -325,7 +352,8 @@ class VersionAdmin(admin.ModelAdmin):
             # change_view.  Once again, a hook for this kind of functionality
             # would be nice.  Unfortunately, it results in doubling the number
             # of queries required to construct the formets.
-            form = ModelForm(instance=obj, initial=self.get_revision_form_data(request, obj, version))
+            form = ModelForm(
+                instance=obj, initial=self.get_revision_form_data(request, obj, version))
             prefixes = {}
             for FormSet, inline in zip(self.get_formsets(request, obj), self.get_inline_instances(request)):
                 # This code is standard for creating the formset.
@@ -335,12 +363,14 @@ class VersionAdmin(admin.ModelAdmin):
                     prefix = "%s-%s" % (prefix, prefixes[prefix])
                 formset = FormSet(instance=obj, prefix=prefix,
                                   queryset=inline.queryset(request))
-                self._hack_inline_formset_initial(inline, FormSet, formset, obj, version, revert, recover)
+                self._hack_inline_formset_initial(inline, FormSet,
+                                                  formset, obj, version, revert, recover)
                 # Add this hacked formset to the form.
                 formsets.append(formset)
         # Generate admin form helper.
         adminForm = helpers.AdminForm(form, self.get_fieldsets(request, obj),
-                                      self.prepopulated_fields, self.get_readonly_fields(request, obj),
+                                      self.prepopulated_fields, self.get_readonly_fields(
+                                          request, obj),
                                       model_admin=self)
         media = self.media + adminForm.media
         # Generate formset helpers.
@@ -382,9 +412,11 @@ class VersionAdmin(admin.ModelAdmin):
                         "recoverlist_url": reverse("%s:%s_%s_recoverlist" % (self.admin_site.name, opts.app_label, opts.module_name))})
         # Render the form.
         if revert:
-            form_template = self.revision_form_template or self._get_template_list("revision_form.html")
+            form_template = self.revision_form_template or self._get_template_list(
+                "revision_form.html")
         elif recover:
-            form_template = self.recover_form_template or self._get_template_list("recover_form.html")
+            form_template = self.recover_form_template or self._get_template_list(
+                "recover_form.html")
         else:
             assert False
         return render_to_response(form_template, context, template.RequestContext(request))
@@ -397,7 +429,8 @@ class VersionAdmin(admin.ModelAdmin):
             raise PermissionDenied
         version = get_object_or_404(Version, pk=version_id)
         obj = version.object_version.object
-        context = {"title": _("Recover %(name)s") % {"name": version.object_repr}, }
+        context = {"title": _("Recover %(name)s") %
+                              {"name": version.object_repr}, }
         context.update(extra_context or {})
         return self.render_revision_form(request, obj, version, context, recover=True)
 
@@ -407,18 +440,22 @@ class VersionAdmin(admin.ModelAdmin):
         # check if user has change or add permissions for model
         if not self.has_change_permission(request):
             raise PermissionDenied
-        object_id = unquote(object_id)  # Underscores in primary key get quoted to "_5F"
+        # Underscores in primary key get quoted to "_5F"
+        object_id = unquote(object_id)
         obj = get_object_or_404(self.model, pk=object_id)
-        version = get_object_or_404(Version, pk=version_id, object_id=force_text(obj.pk))
+        version = get_object_or_404(
+            Version, pk=version_id, object_id=force_text(obj.pk))
         # Generate the context.
-        context = {"title": _("Revert %(name)s") % {"name": force_text(self.model._meta.verbose_name)}, }
+        context = {"title": _("Revert %(name)s") % {"name":
+                              force_text(self.model._meta.verbose_name)}, }
         context.update(extra_context or {})
         return self.render_revision_form(request, obj, version, context, revert=True)
 
     def changelist_view(self, request, extra_context=None):
         """Renders the change view."""
         opts = self.model._meta
-        context = {"recoverlist_url": reverse("%s:%s_%s_recoverlist" % (self.admin_site.name, opts.app_label, opts.module_name)),
+        context = {
+            "recoverlist_url": reverse("%s:%s_%s_recoverlist" % (self.admin_site.name, opts.app_label, opts.module_name)),
                    "add_url": reverse("%s:%s_%s_add" % (self.admin_site.name, opts.app_label, opts.module_name)), }
         context.update(extra_context or {})
         return super(VersionAdmin, self).changelist_view(request, context)
@@ -428,7 +465,8 @@ class VersionAdmin(admin.ModelAdmin):
         # check if user has change or add permissions for model
         if not self.has_change_permission(request):
             raise PermissionDenied
-        object_id = unquote(object_id)  # Underscores in primary key get quoted to "_5F"
+        # Underscores in primary key get quoted to "_5F"
+        object_id = unquote(object_id)
         opts = self.model._meta
         action_list = [
             {

@@ -14,9 +14,12 @@ class Migration(DataMigration):
         "Write your forwards methods here."
         for version in orm.Version.objects.filter(object_id_int__isnull=True).iterator():
             try:
-                content_type = ContentType.objects.get_for_id(version.content_type_id)
+                content_type = ContentType.objects.get_for_id(
+                    version.content_type_id)
             except AttributeError:
-                version.delete()  # This version refers to a content type that doesn't exist any more.
+                # This version refers to a content type that doesn't exist any
+                # more.
+                version.delete()
                 continue
             model = content_type.model_class()
             if has_int_pk(model):

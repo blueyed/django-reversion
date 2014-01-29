@@ -60,7 +60,8 @@ else:
         elif cleanup is None:
             pass
         else:
-            raise ValueError("cleanup parameter should be one of 'semantic', 'efficiency' or None.")
+            raise ValueError(
+                "cleanup parameter should be one of 'semantic', 'efficiency' or None.")
         return diffs
 
     def generate_patch(old_version, new_version, field_name, cleanup=None):
