@@ -256,12 +256,14 @@ class ApiTest(RevisionTestBase):
 
     def testRevisionSignals(self):
         pre_revision_receiver_called = []
+
         def pre_revision_receiver(**kwargs):
             self.assertEqual(kwargs["instances"], [self.test11])
             self.assertTrue(isinstance(kwargs["revision"], Revision))
             self.assertEqual(len(kwargs["versions"]), 1)
             pre_revision_receiver_called.append(True)
         post_revision_receiver_called = []
+
         def post_revision_receiver(**kwargs):
             self.assertEqual(kwargs["instances"], [self.test11])
             self.assertTrue(isinstance(kwargs["revision"], Revision))

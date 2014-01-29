@@ -407,6 +407,7 @@ class RevisionManager(object):
     def _follow_relationships(self, objects):
         """Follows all relationships in the given set of objects."""
         followed = set()
+
         def _follow(obj):
             if obj in followed or obj.pk is None:
                 return
