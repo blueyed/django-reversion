@@ -36,6 +36,7 @@ ZERO = datetime.timedelta(0)
 
 
 class UTC(datetime.tzinfo):
+
     """UTC"""
 
     def utcoffset(self, dt):
