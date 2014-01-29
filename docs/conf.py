@@ -184,7 +184,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'django-reversion.tex', 'django-reversion Documentation',
+    ('index', 'django-reversion.tex', 'django-reversion Documentation',
    'Dave Hall', 'manual'),
 ]
 
@@ -228,7 +228,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'django-reversion', 'django-reversion Documentation',
+    ('index', 'django-reversion', 'django-reversion Documentation',
    'Dave Hall', 'django-reversion', 'One line description of project.',
    'Miscellaneous'),
 ]
