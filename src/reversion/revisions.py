@@ -2,7 +2,8 @@
 
 from __future__ import unicode_literals
 
-import operator, sys
+import operator
+import sys
 from functools import wraps, reduce
 from threading import local
 from weakref import WeakValueDictionary

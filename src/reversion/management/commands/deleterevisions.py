@@ -1,6 +1,8 @@
 from __future__ import unicode_literals, print_function
 
-import datetime, operator, sys
+import datetime
+import operator
+import sys
 from optparse import make_option
 
 from django.core.management.base import BaseCommand

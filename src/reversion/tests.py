@@ -6,7 +6,8 @@ These tests require Python 2.5 to run.
 
 from __future__ import unicode_literals
 
-import datetime, os
+import datetime
+import os
 
 from django.db import models
 from django.test import TestCase
