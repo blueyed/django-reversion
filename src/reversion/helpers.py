@@ -85,4 +85,3 @@ else:
         """
         diffs = generate_diffs(old_version, new_version, field_name, cleanup)
         return dmp.diff_prettyHtml(diffs)
-
