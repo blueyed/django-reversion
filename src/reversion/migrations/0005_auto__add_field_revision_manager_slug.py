@@ -12,12 +12,10 @@ class Migration(SchemaMigration):
         # Adding field 'Revision.manager_slug'
         db.add_column('reversion_revision', 'manager_slug', self.gf('django.db.models.fields.CharField')(default='default', max_length=200, db_index=True), keep_default=False)
 
-
     def backwards(self, orm):
 
         # Deleting field 'Revision.manager_slug'
         db.delete_column('reversion_revision', 'manager_slug')
-
 
     models = {
         'auth.group': {

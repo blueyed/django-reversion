@@ -11,13 +11,11 @@ class Migration(SchemaMigration):
         # Deleting field 'Version.type'
         db.delete_column('reversion_version', 'type')
 
-
     def backwards(self, orm):
         # Adding field 'Version.type'
         db.add_column('reversion_version', 'type',
                       self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=1, db_index=True),
                       keep_default=False)
-
 
     models = {
         'auth.group': {

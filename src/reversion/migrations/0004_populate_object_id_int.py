@@ -23,10 +23,8 @@ class Migration(DataMigration):
                 version.object_id_int = int(version.object_id)
                 version.save()
 
-
     def backwards(self, orm):
         "Write your backwards methods here."
-
 
     models = {
         'auth.group': {

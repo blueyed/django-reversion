@@ -856,7 +856,6 @@ class VersionAdminTest(TestCase):
         })
         obj = ChildTestAdminModel.objects.get(id=obj_pk)
 
-
     def createInlineObjects(self, should_delete):
         # Create an instance via the admin without a child.
         response = self.client.post("/admin/auth/inlinetestparentmodel/add/", {
@@ -897,7 +896,6 @@ class VersionAdminTest(TestCase):
 
         # don't actually submit a post since the values we submit would be from the test, not what the admin defaults
 
-
     @skipUnless('django.contrib.admin' in settings.INSTALLED_APPS,
                 "django.contrib.admin not activated")
     def testInlineAdmin(self):
@@ -920,7 +918,6 @@ class VersionAdminTest(TestCase):
         self.assertFalse('children' in reversion.get_adapter(InlineTestParentModel).follow)
 
         self.createInlineObjects(False)
-
 
     def tearDown(self):
         self.client.logout()

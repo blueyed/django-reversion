@@ -152,7 +152,6 @@ Examples:
 
             revision_query = revision_query.filter(pk__in=revisions_not_keeped)
 
-
         # Prepare message if verbose
         if verbosity > 0:
             if not date and not app_labels and not keep:
@@ -183,14 +182,12 @@ Examples:
                     print("No revision%s%sto delete%s.\nDone" % (date_msg, models_msg, keep_msg))
                     sys.exit()
 
-
         # Ask confirmation
         if confirmation:
             choice = raw_input("Are you sure you want to delete theses revisions? [y|N] ")
             if choice.lower() != "y":
                 print("Aborting revision deletion.")
                 sys.exit()
-
 
         # Delete versions and revisions
         print("Deleting revisions...")
