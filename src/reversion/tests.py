@@ -723,13 +723,13 @@ site.register(InlineTestUnrelatedParentModel, InlineTestUnrelatedParentModelAdmi
 
 urlpatterns = patterns("",
 
-    url("^success/$", save_revision_view),
+                       url("^success/$", save_revision_view),
 
-    url("^error/$", error_revision_view),
+                       url("^error/$", error_revision_view),
 
-    url("^double/$", double_middleware_revision_view),
+                       url("^double/$", double_middleware_revision_view),
 
-    url("^admin/", include(site.get_urls(), namespace="admin")),
+                       url("^admin/", include(site.get_urls(), namespace="admin")),
 
 )
 

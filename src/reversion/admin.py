@@ -198,7 +198,7 @@ class VersionAdmin(admin.ModelAdmin):
         extra_context = extra_context or {}
         context.update(extra_context)
         return render_to_response(self.recover_list_template or self._get_template_list("recover_list.html"),
-            context, template.RequestContext(request))
+                                  context, template.RequestContext(request))
 
     def get_revision_form_data(self, request, obj, version):
         """
@@ -338,8 +338,8 @@ class VersionAdmin(admin.ModelAdmin):
                 formsets.append(formset)
         # Generate admin form helper.
         adminForm = helpers.AdminForm(form, self.get_fieldsets(request, obj),
-            self.prepopulated_fields, self.get_readonly_fields(request, obj),
-            model_admin=self)
+                                      self.prepopulated_fields, self.get_readonly_fields(request, obj),
+                                      model_admin=self)
         media = self.media + adminForm.media
         # Generate formset helpers.
         inline_admin_formsets = []
@@ -348,7 +348,7 @@ class VersionAdmin(admin.ModelAdmin):
             readonly = list(inline.get_readonly_fields(request, obj))
             prepopulated = inline.get_prepopulated_fields(request, obj)
             inline_admin_formset = helpers.InlineAdminFormSet(inline, formset,
-                fieldsets, prepopulated, readonly, model_admin=self)
+                                                              fieldsets, prepopulated, readonly, model_admin=self)
             inline_admin_formsets.append(inline_admin_formset)
             media = media + inline_admin_formset.media
         # Generate the context.

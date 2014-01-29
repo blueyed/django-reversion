@@ -469,9 +469,9 @@ class RevisionManager(object):
                 )
                 # Send the pre_revision_commit signal.
                 pre_revision_commit.send(self,
-                    instances=ordered_objects,
-                    revision=revision,
-                    versions=new_versions,
+                                         instances=ordered_objects,
+                                         revision=revision,
+                                         versions=new_versions,
                                          )
                 # Save the revision.
                 with transaction.atomic(using=db):
@@ -485,9 +485,9 @@ class RevisionManager(object):
                         cls._default_manager.db_manager(db).create(revision=revision, **kwargs)
                 # Send the pre_revision_commit signal.
                 post_revision_commit.send(self,
-                    instances=ordered_objects,
-                    revision=revision,
-                    versions=new_versions,
+                                          instances=ordered_objects,
+                                          revision=revision,
+                                          versions=new_versions,
                                           )
                 # Return the revision.
                 return revision

@@ -20,16 +20,16 @@ from django.conf import settings
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option("--comment",
-            action="store",
-            dest="comment",
-            default="Initial version.",
-            help='Specify the comment to add to the revisions. Defaults to "Initial version.".'),
+                    action="store",
+                    dest="comment",
+                    default="Initial version.",
+                    help='Specify the comment to add to the revisions. Defaults to "Initial version.".'),
         make_option("--batch-size",
-            action="store",
-            dest="batch_size",
-            type=int,
-            default=500,
-            help="For large sets of data, revisions will be populated in batches. Defaults to 500"),
+                    action="store",
+                    dest="batch_size",
+                    type=int,
+                    default=500,
+                    help="For large sets of data, revisions will be populated in batches. Defaults to 500"),
     )
     args = '[appname, appname.ModelName, ...] [--comment="Initial version."]'
     help = "Creates initial revisions for a given app [and model]."
