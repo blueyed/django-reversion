@@ -46,9 +46,9 @@ class Revision(models.Model):
     """A group of related object versions."""
 
     manager_slug = models.CharField(
-        max_length = 200,
-        db_index = True,
-        default = "default",
+        max_length=200,
+        db_index=True,
+        default="default",
     )
 
     date_created = models.DateTimeField(auto_now_add=True,
@@ -118,10 +118,10 @@ class Version(models.Model):
     object_id = models.TextField(help_text="Primary key of the model under version control.")
 
     object_id_int = models.IntegerField(
-        blank = True,
-        null = True,
-        db_index = True,
-        help_text = "An indexed, integer version of the stored model's primary key, used for faster lookups.",
+        blank=True,
+        null=True,
+        db_index=True,
+        help_text="An indexed, integer version of the stored model's primary key, used for faster lookups.",
     )
 
     content_type = models.ForeignKey(ContentType,

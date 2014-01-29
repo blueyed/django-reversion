@@ -75,8 +75,8 @@ class VersionAdapter(object):
                     yield related_obj
             elif related is not None:
                 raise TypeError("Cannot follow the relationship {relationship}. Expected a model or QuerySet, found {related}".format(
-                    relationship = relationship,
-                    related = related,
+                    relationship=relationship,
+                    related=related,
                 ))
 
     def get_serialization_format(self):
@@ -88,7 +88,7 @@ class VersionAdapter(object):
         return serializers.serialize(
             self.get_serialization_format(),
             (obj,),
-            fields = list(self.get_fields_to_serialize()),
+            fields=list(self.get_fields_to_serialize()),
         )
 
     def get_version_data(self, obj, db=None):
@@ -175,11 +175,11 @@ class RevisionContextManager(local):
                                 for obj, data
                                 in manager_context.items()
                             ),
-                            user = self._user,
-                            comment = self._comment,
-                            meta = self._meta,
-                            ignore_duplicates = self._ignore_duplicates,
-                            db = self._db,
+                            user=self._user,
+                            comment=self._comment,
+                            meta=self._meta,
+                            ignore_duplicates=self._ignore_duplicates,
+                            db=self._db,
                         )
             finally:
                 self.clear()
@@ -368,7 +368,7 @@ class RevisionManager(object):
         # Prevent multiple registration.
         if self.is_registered(model):
             raise RegistrationError("{model} has already been registered with django-reversion".format(
-                model = model,
+                model=model,
             ))
         # Prevent proxy models being registered.
         if model._meta.proxy:
@@ -392,14 +392,14 @@ class RevisionManager(object):
         if self.is_registered(model):
             return self._registered_models[self._registration_key_for_model(model)]
         raise RegistrationError("{model} has not been registered with django-reversion".format(
-            model = model,
+            model=model,
         ))
 
     def unregister(self, model):
         """Removes a model from version control."""
         if not self.is_registered(model):
             raise RegistrationError("{model} has not been registered with django-reversion".format(
-                model = model,
+                model=model,
             ))
         del self._registered_models[self._registration_key_for_model(model)]
         post_save.disconnect(self._post_save_receiver, model)
@@ -422,7 +422,7 @@ class RevisionManager(object):
         """Returns all versions that apply to this manager."""
         db = db or DEFAULT_DB_ALIAS
         return Version.objects.using(db).filter(
-            revision__manager_slug = self._manager_slug,
+            revision__manager_slug=self._manager_slug,
         ).select_related("revision")
 
     def save_revision(self, objects, ignore_duplicates=False, user=None, comment="", meta=(), db=None):
@@ -463,15 +463,15 @@ class RevisionManager(object):
             if save_revision:
                 # Save a new revision.
                 revision = Revision(
-                    manager_slug = self._manager_slug,
-                    user = user,
-                    comment = comment,
+                    manager_slug=self._manager_slug,
+                    user=user,
+                    comment=comment,
                 )
                 # Send the pre_revision_commit signal.
                 pre_revision_commit.send(self,
-                    instances = ordered_objects,
-                    revision = revision,
-                    versions = new_versions,
+                    instances=ordered_objects,
+                    revision=revision,
+                    versions=new_versions,
                 )
                 # Save the revision.
                 with transaction.atomic(using=db):
@@ -485,9 +485,9 @@ class RevisionManager(object):
                         cls._default_manager.db_manager(db).create(revision=revision, **kwargs)
                 # Send the pre_revision_commit signal.
                 post_revision_commit.send(self,
-                    instances = ordered_objects,
-                    revision = revision,
-                    versions = new_versions,
+                    instances=ordered_objects,
+                    revision=revision,
+                    versions=new_versions,
                 )
                 # Return the revision.
                 return revision
@@ -503,7 +503,7 @@ class RevisionManager(object):
         db = db or DEFAULT_DB_ALIAS
         content_type = ContentType.objects.db_manager(db).get_for_model(model)
         versions = self._get_versions(db).filter(
-            content_type = content_type,
+            content_type=content_type,
         ).select_related("revision")
         if has_int_pk(model):
             # We can do this as a fast, indexed lookup.
@@ -561,7 +561,7 @@ class RevisionManager(object):
         content_type = ContentType.objects.db_manager(db).get_for_model(model_class)
         live_pk_queryset = model_class._default_manager.db_manager(model_db).all().values_list("pk", flat=True)
         versioned_objs = self._get_versions(db).filter(
-            content_type = content_type,
+            content_type=content_type,
         )
         if has_int_pk(model_class):
             # If the model and version data are in different databases, decouple the queries.
@@ -569,15 +569,15 @@ class RevisionManager(object):
                 live_pk_queryset = list(live_pk_queryset.iterator())
             # We can do this as a fast, in-database join.
             deleted_version_pks = versioned_objs.exclude(
-                object_id_int__in = live_pk_queryset
+                object_id_int__in=live_pk_queryset
             ).values_list("object_id_int")
         else:
             # This join has to be done as two separate queries.
             deleted_version_pks = versioned_objs.exclude(
-                object_id__in = list(live_pk_queryset.iterator())
+                object_id__in=list(live_pk_queryset.iterator())
             ).values_list("object_id")
         deleted_version_pks = deleted_version_pks.annotate(
-            latest_pk = Max("pk")
+            latest_pk=Max("pk")
         ).values_list("latest_pk", flat=True)
         # HACK: MySQL deals extremely badly with this as a subquery, and can hang infinitely.
         # TODO: If a version is identified where this bug no longer applies, we can add a version specifier.

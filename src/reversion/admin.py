@@ -156,10 +156,10 @@ class VersionAdmin(admin.ModelAdmin):
         super(VersionAdmin, self).log_addition(request, object)
         self.revision_manager.save_revision(
             self.get_revision_data(request, object),
-            user = request.user,
-            comment = _("Initial version."),
-            ignore_duplicates = self.ignore_duplicate_revisions,
-            db = self.revision_context_manager.get_db(),
+            user=request.user,
+            comment=_("Initial version."),
+            ignore_duplicates=self.ignore_duplicate_revisions,
+            db=self.revision_context_manager.get_db(),
         )
 
     def log_change(self, request, object, message):
@@ -167,10 +167,10 @@ class VersionAdmin(admin.ModelAdmin):
         super(VersionAdmin, self).log_change(request, object, message)
         self.revision_manager.save_revision(
             self.get_revision_data(request, object),
-            user = request.user,
-            comment = message,
-            ignore_duplicates = self.ignore_duplicate_revisions,
-            db = self.revision_context_manager.get_db(),
+            user=request.user,
+            comment=message,
+            ignore_duplicates=self.ignore_duplicate_revisions,
+            db=self.revision_context_manager.get_db(),
         )
 
     def _order_version_queryset(self, queryset):
@@ -461,7 +461,7 @@ class VersionMetaAdmin(VersionAdmin):
         else:
             version_table_field = "object_id"
         return super(VersionMetaAdmin, self).get_queryset(request).extra(
-            select = {
+            select={
                 "date_modified": """
                     SELECT MAX(%(revision_table)s.date_created)
                     FROM %(version_table)s
@@ -475,7 +475,7 @@ class VersionMetaAdmin(VersionAdmin):
                     "version_table_field": connection.ops.quote_name(version_table_field),
                 }
             },
-            select_params = (content_type.id,),
+            select_params=(content_type.id,),
         )
 
     def get_date_modified(self, obj):

@@ -51,7 +51,7 @@ class UTC(datetime.tzinfo):
 class ReversionTestModelBase(models.Model):
 
     name = models.CharField(
-        max_length = 100,
+        max_length=100,
     )
 
     def __str__(self):
@@ -78,9 +78,9 @@ def get_str_pk():
 class ReversionTestModel2(ReversionTestModelBase):
 
     id = models.CharField(
-        primary_key = True,
-        max_length = 100,
-        default = get_str_pk
+        primary_key=True,
+        max_length=100,
+        default=get_str_pk
     )
 
 
@@ -137,19 +137,19 @@ class ReversionTestBase(TestCase):
         reversion.register(ReversionTestModel2)
         # Create some test data.
         self.test11 = ReversionTestModel1.objects.create(
-            name = "model1 instance1 version1",
+            name="model1 instance1 version1",
         )
         self.test12 = ReversionTestModel1.objects.create(
-            name = "model1 instance2 version1",
+            name="model1 instance2 version1",
         )
         self.test21 = ReversionTestModel2.objects.create(
-            name = "model2 instance1 version1",
+            name="model2 instance1 version1",
         )
         self.test22 = ReversionTestModel2.objects.create(
-            name = "model2 instance2 version1",
+            name="model2 instance2 version1",
         )
         self.user = User.objects.create(
-            username = "user1",
+            username="user1",
         )
 
     def tearDown(self):
@@ -422,7 +422,7 @@ class MultiTableInheritanceApiTest(RevisionTestBase):
         reversion.register(ReversionTestModel1Child, follow=("reversiontestmodel1_ptr",))
         with reversion.create_revision():
             self.testchild1 = ReversionTestModel1Child.objects.create(
-                name = "modelchild1 instance1 version 1",
+                name="modelchild1 instance1 version 1",
             )
 
     def testCanRetreiveFullFieldDict(self):
@@ -453,8 +453,8 @@ class FollowModelsTest(ReversionTestBase):
         reversion.register(ReversionTestModel1, follow=("testfollowmodel_set",))
         reversion.register(TestFollowModel, follow=("test_model_1", "test_model_2s",))
         self.follow1 = TestFollowModel.objects.create(
-            name = "related instance1 version 1",
-            test_model_1 = self.test11,
+            name="related instance1 version 1",
+            test_model_1=self.test11,
         )
         self.follow1.test_model_2s.add(self.test21, self.test22)
 
@@ -469,7 +469,7 @@ class FollowModelsTest(ReversionTestBase):
     def testRevertWithDelete(self):
         with reversion.create_revision():
             test23 = ReversionTestModel2.objects.create(
-                name = "model2 instance3 version1",
+                name="model2 instance3 version1",
             )
             self.follow1.test_model_2s.add(test23)
             self.follow1.save()
@@ -503,8 +503,8 @@ class FollowModelsTest(ReversionTestBase):
     def testReverseFollowRevertWithDelete(self):
         with reversion.create_revision():
             follow2 = TestFollowModel.objects.create(
-                name = "related instance2 version 1",
-                test_model_1 = self.test11,
+                name="related instance2 version 1",
+                test_model_1=self.test11,
             )
         # Test that a revert with delete works.
         follow2_pk = follow2.pk
@@ -597,16 +597,16 @@ revision_middleware_decorator = decorator_from_middleware(RevisionMiddleware)
 @revision_middleware_decorator
 def save_revision_view(request):
     ReversionTestModel1.objects.create(
-        name = "model1 instance3 version1",
+        name="model1 instance3 version1",
     )
     ReversionTestModel1.objects.create(
-        name = "model1 instance4 version1",
+        name="model1 instance4 version1",
     )
     ReversionTestModel2.objects.create(
-        name = "model2 instance3 version1",
+        name="model2 instance3 version1",
     )
     ReversionTestModel2.objects.create(
-        name = "model2 instance4 version1",
+        name="model2 instance4 version1",
     )
     return HttpResponse("OK")
 
@@ -615,16 +615,16 @@ def save_revision_view(request):
 @revision_middleware_decorator
 def error_revision_view(request):
     ReversionTestModel1.objects.create(
-        name = "model1 instance3 version1",
+        name="model1 instance3 version1",
     )
     ReversionTestModel1.objects.create(
-        name = "model1 instance4 version1",
+        name="model1 instance4 version1",
     )
     ReversionTestModel2.objects.create(
-        name = "model2 instance3 version1",
+        name="model2 instance3 version1",
     )
     ReversionTestModel2.objects.create(
-        name = "model2 instance4 version1",
+        name="model2 instance4 version1",
     )
     raise Exception("Foo")
 
@@ -642,7 +642,7 @@ site = admin.AdminSite()
 class ParentTestAdminModel(models.Model):
 
     parent_name = models.CharField(
-        max_length = 200,
+        max_length=200,
     )
 
     class Meta:
@@ -653,7 +653,7 @@ class ParentTestAdminModel(models.Model):
 class ChildTestAdminModel(ParentTestAdminModel):
 
     child_name = models.CharField(
-        max_length = 200,
+        max_length=200,
     )
 
     def __str__(self):
@@ -766,9 +766,9 @@ class VersionAdminTest(TestCase):
             os.path.join(os.path.dirname(admin.__file__), "templates"),
         )
         self.user = User(
-            username = "foo",
-            is_staff = True,
-            is_superuser = True,
+            username="foo",
+            is_staff=True,
+            is_superuser=True,
         )
         self.user.set_password("bar")
         self.user.save()
@@ -776,13 +776,13 @@ class VersionAdminTest(TestCase):
         if hasattr(self, "settings"):
             with self.settings(INSTALLED_APPS=tuple(set(tuple(settings.INSTALLED_APPS) + ("django.contrib.sessions",)))):  # HACK: Without this the client won't log in, for some reason.
                 self.client.login(
-                    username = "foo",
-                    password = "bar",
+                    username="foo",
+                    password="bar",
                 )
         else:
             self.client.login(
-                username = "foo",
-                password = "bar",
+                username="foo",
+                password="bar",
             )
 
     @skipUnless('django.contrib.admin' in settings.INSTALLED_APPS,

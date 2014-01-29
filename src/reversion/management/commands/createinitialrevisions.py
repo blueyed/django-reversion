@@ -105,12 +105,12 @@ class Command(BaseCommand):
             if has_int_pk(model_class):
                 # We can do this as a fast database join!
                 live_objs = live_objs.exclude(
-                    pk__in = versioned_pk_queryset.values_list("object_id_int", flat=True)
+                    pk__in=versioned_pk_queryset.values_list("object_id_int", flat=True)
                 )
             else:
                 # This join has to be done as two separate queries.
                 live_objs = live_objs.exclude(
-                    pk__in = list(versioned_pk_queryset.values_list("object_id", flat=True).iterator())
+                    pk__in=list(versioned_pk_queryset.values_list("object_id", flat=True).iterator())
                 )
             # Save all the versions.
             ids = list(live_objs.values_list(model_class._meta.pk.name, flat=True))
