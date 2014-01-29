@@ -133,7 +133,7 @@ class Command(BaseCommand):
                     except:
                         print(
                             "ERROR: Could not save initial version for %s %s." %
-                              (model_class.__name__, obj.pk))
+                            (model_class.__name__, obj.pk))
                         raise
                     created_count += 1
                 reset_queries()

@@ -959,7 +959,7 @@ class VersionAdminTest(TestCase):
         # check if reversion page has the checkbox for the inline checked
         response = self.client.get(
             "/admin/auth/inlinetestparentmodel/%s/history/%s/" %
-                                   (parent_pk, version_list[1].id))
+            (parent_pk, version_list[1].id))
         self.assertEqual(response.status_code, 200)
         if should_delete:
             # this is crude

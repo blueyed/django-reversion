@@ -174,8 +174,8 @@ class Version(models.Model):
                 try:
                     parent_version = Version.objects.get(
                         revision__id=self.revision_id,
-                                                         content_type=content_type,
-                                                         object_id=parent_id)
+                        content_type=content_type,
+                        object_id=parent_id)
                 except Version.DoesNotExist:
                     pass
                 else:

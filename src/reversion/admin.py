@@ -214,7 +214,7 @@ class VersionAdmin(admin.ModelAdmin):
         return render_to_response(
             self.recover_list_template or self._get_template_list(
                 "recover_list.html"),
-                                  context, template.RequestContext(request))
+            context, template.RequestContext(request))
 
     def get_revision_form_data(self, request, obj, version):
         """
@@ -335,11 +335,11 @@ class VersionAdmin(admin.ModelAdmin):
                         related_obj.save()
                     formset.save_m2m()
                 change_message = _("Reverted to previous version, saved on %(datetime)s") % {
-                                   "datetime": localize(version.revision.date_created)}
+                    "datetime": localize(version.revision.date_created)}
                 self.log_change(request, new_object, change_message)
                 self.message_user(
                     request, _('The %(model)s "%(name)s" was reverted successfully. You may edit it again below.') %
-                                  {"model": force_text(opts.verbose_name), "name": force_text(obj)})
+                    {"model": force_text(opts.verbose_name), "name": force_text(obj)})
                 # Redirect to the model change form.
                 if revert:
                     return HttpResponseRedirect("../../")
@@ -456,7 +456,7 @@ class VersionAdmin(admin.ModelAdmin):
         opts = self.model._meta
         context = {
             "recoverlist_url": reverse("%s:%s_%s_recoverlist" % (self.admin_site.name, opts.app_label, opts.module_name)),
-                   "add_url": reverse("%s:%s_%s_add" % (self.admin_site.name, opts.app_label, opts.module_name)), }
+            "add_url": reverse("%s:%s_%s_add" % (self.admin_site.name, opts.app_label, opts.module_name)), }
         context.update(extra_context or {})
         return super(VersionAdmin, self).changelist_view(request, context)
 

@@ -192,7 +192,7 @@ Examples:
                             revision__in=revision_query)
                     print(
                         "%s revision(s)%s%swill be deleted%s.\n%s model version(s) will be deleted." %
-                          (revision_count, date_msg, models_msg, keep_msg, version_query.count()))
+                        (revision_count, date_msg, models_msg, keep_msg, version_query.count()))
                 else:
                     print("No revision%s%sto delete%s.\nDone" %
                           (date_msg, models_msg, keep_msg))
