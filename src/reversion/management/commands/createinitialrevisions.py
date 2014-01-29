@@ -46,7 +46,7 @@ class Command(BaseCommand):
         app_list = SortedDict()
         # if no apps given, use all installed.
         if len(app_labels) == 0:
-            for app in models.get_apps ():
+            for app in models.get_apps():
                 if not app in app_list:
                     app_list[app] = []
                 for model_class in models.get_models(app):
