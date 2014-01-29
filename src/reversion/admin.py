@@ -395,7 +395,7 @@ class VersionAdmin(admin.ModelAdmin):
             raise PermissionDenied
         version = get_object_or_404(Version, pk=version_id)
         obj = version.object_version.object
-        context = {"title": _("Recover %(name)s") % {"name": version.object_repr},}
+        context = {"title": _("Recover %(name)s") % {"name": version.object_repr}, }
         context.update(extra_context or {})
         return self.render_revision_form(request, obj, version, context, recover=True)
 
@@ -409,7 +409,7 @@ class VersionAdmin(admin.ModelAdmin):
         obj = get_object_or_404(self.model, pk=object_id)
         version = get_object_or_404(Version, pk=version_id, object_id=force_text(obj.pk))
         # Generate the context.
-        context = {"title": _("Revert %(name)s") % {"name": force_text(self.model._meta.verbose_name)},}
+        context = {"title": _("Revert %(name)s") % {"name": force_text(self.model._meta.verbose_name)}, }
         context.update(extra_context or {})
         return self.render_revision_form(request, obj, version, context, revert=True)
 
@@ -417,7 +417,7 @@ class VersionAdmin(admin.ModelAdmin):
         """Renders the change view."""
         opts = self.model._meta
         context = {"recoverlist_url": reverse("%s:%s_%s_recoverlist" % (self.admin_site.name, opts.app_label, opts.module_name)),
-                   "add_url": reverse("%s:%s_%s_add" % (self.admin_site.name, opts.app_label, opts.module_name)),}
+                   "add_url": reverse("%s:%s_%s_add" % (self.admin_site.name, opts.app_label, opts.module_name)), }
         context.update(extra_context or {})
         return super(VersionAdmin, self).changelist_view(request, context)
 

@@ -10,7 +10,7 @@ try:
     cmdclass = {"compile_catalog": babel.compile_catalog,
                 "extract_messages": babel.extract_messages,
                 "init_catalog": babel.init_catalog,
-                "update_catalog": babel.update_catalog,}
+                "update_catalog": babel.update_catalog, }
 except ImportError:
     cmdclass = {}
 
@@ -36,4 +36,4 @@ setup(name="django-reversion",
                    'Programming Language :: Python :: 2.7',
                    'Programming Language :: Python :: 3.2',
                    'Programming Language :: Python :: 3.3',
-                   "Framework :: Django",])
+                   "Framework :: Django", ])
