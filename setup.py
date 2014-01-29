@@ -23,7 +23,7 @@ setup(name="django-reversion",
       url="http://github.com/etianen/django-reversion",
       zip_safe=False,
       packages=["reversion", "reversion.management",
-          "reversion.management.commands", "reversion.migrations"],
+                "reversion.management.commands", "reversion.migrations"],
       package_dir={"": "src"},
       package_data={"reversion":
           ["locale/*/LC_MESSAGES/django.*", "templates/reversion/*.html"]},

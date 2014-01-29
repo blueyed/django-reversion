@@ -447,7 +447,7 @@ class VersionAdmin(admin.ModelAdmin):
             Version, pk=version_id, object_id=force_text(obj.pk))
         # Generate the context.
         context = {"title": _("Revert %(name)s") % {"name":
-                              force_text(self.model._meta.verbose_name)}, }
+                                                    force_text(self.model._meta.verbose_name)}, }
         context.update(extra_context or {})
         return self.render_revision_form(request, obj, version, context, revert=True)
 
