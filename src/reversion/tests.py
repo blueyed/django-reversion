@@ -856,7 +856,7 @@ class VersionAdminTest(TestCase):
             "children-INITIAL_FORMS": "0",
             # "children-0-name": "child version 1",
             "_continue": 1,
-            })
+        })
         self.assertEqual(response.status_code, 302)
         parent_pk = response["Location"].split("/")[-2]
         parent = InlineTestParentModel.objects.get(id=parent_pk)
@@ -868,7 +868,7 @@ class VersionAdminTest(TestCase):
             "children-INITIAL_FORMS": "0",
             "children-0-name": "child version 1",
             "_continue": 1,
-            })
+        })
         self.assertEqual(response.status_code, 302)
         children = InlineTestChildModel.objects.filter(parent=parent_pk)
         self.assertEqual(children.count(), 1)

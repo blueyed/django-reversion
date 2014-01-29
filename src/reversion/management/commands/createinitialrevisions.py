@@ -30,7 +30,7 @@ class Command(BaseCommand):
             type=int,
             default=500,
             help="For large sets of data, revisions will be populated in batches. Defaults to 500"),
-        )
+    )
     args = '[appname, appname.ModelName, ...] [--comment="Initial version."]'
     help = "Creates initial revisions for a given app [and model]."
 

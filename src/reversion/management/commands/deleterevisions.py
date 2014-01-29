@@ -37,7 +37,7 @@ class Command(BaseCommand):
             dest="confirmation",
             default=True,
             help="Disable the confirmation before deleting revisions"),
-        )
+    )
     args = "[appname, appname.ModelName, ...] [--date=YYYY-MM-DD | days=0] [--keep=0] [--force] [--no-confirmation]"
     help = """Deletes revisions for a given app [and model] and/or before a specified delay or date.
     
