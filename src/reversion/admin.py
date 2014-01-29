@@ -430,7 +430,7 @@ class VersionAdmin(admin.ModelAdmin):
         version = get_object_or_404(Version, pk=version_id)
         obj = version.object_version.object
         context = {"title": _("Recover %(name)s") %
-                              {"name": version.object_repr}, }
+                   {"name": version.object_repr}, }
         context.update(extra_context or {})
         return self.render_revision_form(request, obj, version, context, recover=True)
 

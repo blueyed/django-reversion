@@ -461,7 +461,7 @@ class RevisionManager(object):
                 # Find the latest revision amongst the latest previous version
                 # of each object.
                 subqueries = [Q(object_id=version.object_id, content_type=version.content_type)
-                                for version in new_versions]
+                              for version in new_versions]
                 subqueries = reduce(operator.or_, subqueries)
                 latest_revision = self._get_versions(db).filter(
                     subqueries).aggregate(Max("revision"))["revision__max"]
