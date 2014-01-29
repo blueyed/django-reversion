@@ -472,7 +472,7 @@ class RevisionManager(object):
                     instances=ordered_objects,
                     revision=revision,
                     versions=new_versions,
-                )
+                                         )
                 # Save the revision.
                 with transaction.atomic(using=db):
                     revision.save(using=db)
@@ -488,7 +488,7 @@ class RevisionManager(object):
                     instances=ordered_objects,
                     revision=revision,
                     versions=new_versions,
-                )
+                                          )
                 # Return the revision.
                 return revision
 
