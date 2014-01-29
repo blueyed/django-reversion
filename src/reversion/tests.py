@@ -47,6 +47,7 @@ class UTC(datetime.tzinfo):
     def dst(self, dt):
         return ZERO
 
+
 @python_2_unicode_compatible
 class ReversionTestModelBase(models.Model):
 
@@ -68,6 +69,7 @@ class ReversionTestModel1(ReversionTestModelBase):
 
 
 str_pk_gen = 0;
+
 
 def get_str_pk():
     global str_pk_gen
@@ -596,6 +598,8 @@ class CreateInitialRevisionsTest(ReversionTestBase):
 revision_middleware_decorator = decorator_from_middleware(RevisionMiddleware)
 
 # A dumb view that saves a revision.
+
+
 @revision_middleware_decorator
 def save_revision_view(request):
     ReversionTestModel1.objects.create(
@@ -712,11 +716,14 @@ site.register(InlineTestParentModel, InlineTestParentModelAdmin)
 class InlineTestUnrelatedParentModel(models.Model):
     pass
 
+
 class InlineTestUnrelatedChildModel(models.Model):
     pass
 
+
 class InlineTestUnrelatedChildModelInline(admin.TabularInline):
     model = InlineTestUnrelatedChildModel
+
 
 class InlineTestUnrelatedParentModelAdmin(reversion.VersionAdmin):
     inlines = (InlineTestUnrelatedChildModelInline, )
