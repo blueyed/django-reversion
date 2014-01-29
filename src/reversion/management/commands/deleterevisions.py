@@ -87,7 +87,7 @@ Examples:
             except ValueError:
                 raise CommandError("The date you give (%s) is not a valid date. The date should be in the ISO format (YYYY-MM-DD)." % options["date"])
 
-        # Find the date from the days arguments.        
+        # Find the date from the days arguments.
         elif days:
             date = datetime.datetime.now() - datetime.timedelta(days)
 
@@ -108,7 +108,7 @@ Examples:
                     # This is just an app, no model qualifier.
                     app_list.add(label)
 
-            # Remove models that their app is already in app_list            
+            # Remove models that their app is already in app_list
             for app, model in mod_list.copy():
                 if app in app_list:
                     mod_list.remove((app, model))

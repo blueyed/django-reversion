@@ -16,7 +16,7 @@ class ParentModel(models.Model):
         return self.parent_name
     
 
-@python_2_unicode_compatible    
+@python_2_unicode_compatible
 class ChildModel(ParentModel):
     
     child_name = models.CharField(max_length=255)
@@ -34,7 +34,7 @@ class ChildModel(ParentModel):
         verbose_name_plural = _("child models")
     
 
-@python_2_unicode_compatible    
+@python_2_unicode_compatible
 class RelatedModel(models.Model):
     
     child_model = models.ForeignKey(ChildModel)
@@ -48,7 +48,7 @@ class RelatedModel(models.Model):
         return self.related_name
     
 
-@python_2_unicode_compatible    
+@python_2_unicode_compatible
 class GenericRelatedModel(models.Model):
     
     content_type = models.ForeignKey(ContentType)

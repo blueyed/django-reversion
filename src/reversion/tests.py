@@ -589,7 +589,7 @@ class CreateInitialRevisionsTest(ReversionTestBase):
         self.assertEqual(Revision.objects.all()[0].comment, "Foo bar")
 
 
-# Tests for reversion functionality that's tied to requests.        
+# Tests for reversion functionality that's tied to requests.
 
 revision_middleware_decorator = decorator_from_middleware(RevisionMiddleware)
 
@@ -938,7 +938,7 @@ class PatchTest(RevisionTestBase):
         with reversion.create_revision():
             self.test11.name = "model1 instance1 version2"
             self.test11.save()
-        self.version2, self.version1 = reversion.get_for_object(self.test11) 
+        self.version2, self.version1 = reversion.get_for_object(self.test11)
     
     @skipUnless(can_test_patch, "Diff match patch library not installed")
     def testCanGeneratePatch(self):
@@ -947,7 +947,7 @@ class PatchTest(RevisionTestBase):
             "@@ -17,9 +17,9 @@\n  version\n-1\n+2\n",
         )
 
-    @skipUnless(can_test_patch, "Diff match patch library not installed")    
+    @skipUnless(can_test_patch, "Diff match patch library not installed")
     def testCanGeneratePathHtml(self):
         self.assertEqual(
             generate_patch_html(self.version1, self.version2, "name"),

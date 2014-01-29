@@ -144,7 +144,7 @@ class Version(models.Model):
         data = force_text(data.encode("utf8"))
         return list(serializers.deserialize(self.format, data, ignorenonexistent=True))[0]
     
-    @property   
+    @property
     def field_dict(self):
         """
         A dictionary mapping field names to field values in this version

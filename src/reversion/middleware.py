@@ -39,5 +39,5 @@ class RevisionMiddleware(object):
         
     def process_exception(self, request, exception):
         """Closes the revision."""
-        revision_context_manager.invalidate()    
+        revision_context_manager.invalidate()
         self._close_revision(request)
