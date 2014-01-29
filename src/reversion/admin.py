@@ -513,7 +513,7 @@ class VersionMetaAdmin(VersionAdmin):
             "table": connection.ops.quote_name(self.model._meta.db_table),
             "pk": connection.ops.quote_name(pk.db_column or pk.attname),
             "version_table_field": connection.ops.quote_name(version_table_field),
-            }
+        }
             },
             select_params=(content_type.id,),
         )
